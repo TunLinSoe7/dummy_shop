@@ -11,16 +11,20 @@ class NavigationMenu extends StatelessWidget {
       child: Consumer<NavigationProvider>(
         builder: (_,provider,__)=>Scaffold(
           bottomNavigationBar: NavigationBar(
+            animationDuration: Duration(seconds: 2),
+            shadowColor: Colors.black,
+            surfaceTintColor: Colors.white,
+            indicatorColor: const Color(0xff19c463),
             backgroundColor: Colors.white,
             selectedIndex: provider.currentIndex,
             onDestinationSelected: (index){
               provider.setIndex= index;
             },
             destinations: const [
-              NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
-              NavigationDestination(icon: Icon(Icons.search_rounded), label: 'Search'),
-              NavigationDestination(icon: Icon(Icons.favorite_border), label: 'Favourite'),
-              NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
+              NavigationDestination(icon: Icon(Icons.home_outlined,size: 30,), label: 'Home',selectedIcon: Icon(Icons.home,color: Colors.white,size: 30,),),
+              NavigationDestination(icon: Icon(Icons.search_rounded,size: 30,), label: 'Search',selectedIcon: Icon(Icons.search_outlined,color: Colors.white,size: 30,)),
+              NavigationDestination(icon: Icon(Icons.favorite_border,size: 30,), label: 'Favourite',selectedIcon: Icon(Icons.favorite,color: Colors.white,size: 30,)),
+              NavigationDestination(icon: Icon(Icons.person_outline,size: 30,), label: 'Profile',selectedIcon: Icon(Icons.person,color: Colors.white,size: 30,)),
             ],
           ),
           body: IndexedStack(

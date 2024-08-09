@@ -1,3 +1,4 @@
+import 'package:dummyShop/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 
@@ -21,6 +22,7 @@ class CategoryItemView extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
+          color: isSelected?const Color(0xff19c463):kGreyColor,
           border: Border.all(
             width: 2,
             color: isSelected?const Color(0xff19c463):Colors.black,
@@ -29,7 +31,8 @@ class CategoryItemView extends StatelessWidget {
         ),
         child: Text(
           category,
-          style: const TextStyle(
+          style: TextStyle(
+            color: isSelected?Colors.white:Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),

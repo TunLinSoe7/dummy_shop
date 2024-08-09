@@ -1,3 +1,5 @@
+import 'package:dummyShop/screens/product_detail_screen.dart';
+import 'package:dummyShop/utils/helper_functions/helpers_functions.dart';
 import 'package:dummyShop/utils/item_views/product_item_views.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,23 +42,39 @@ class ProductsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeScreenProvider>(builder:(_,product,__){
-      return  product.isLoading?const Center(child: CircularProgressIndicator()):GridView.builder(
-        itemCount: product.productsByCategory.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisExtent: 210,
-          mainAxisSpacing: 5,
-          crossAxisCount: 2,
-        ),
-        itemBuilder: (_, index) =>ProductItemViews(
-          imageUrl: product.productsByCategory[index].thumbnail ?? '',
-          title: product.productsByCategory[index].title ?? '',
-          rating: product.productsByCategory[index].rating.toString(),
-          price: product.productsByCategory[index].price.toString(),
-        ),
-      );
-    } );
+    return Consumer<HomeScreenProvider>(
+      builder: (_, product, __) {
+        // Show loading indicator if productsByCategory is null or empty
+        if (product.productsByCategory == null || product.productsByCategory!.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // Otherwise, show the GridView
+        return GridView.builder(
+          itemCount: product.productsByCategory!.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisExtent: 210,
+            mainAxisSpacing: 5,
+            crossAxisCount: 2,
+          ),
+          itemBuilder: (_, index) => ProductItemViews(
+            tag: 'tag$index',
+            imageUrl: product.productsByCategory?[index].thumbnail ?? '',
+            title: product.productsByCategory?[index].title ?? '',
+            rating: product.productsByCategory?[index].rating.toString() ?? '',
+            price: product.productsByCategory?[index].price.toString() ?? '',
+            onTap: () {
+              HelperFunctions.navigateToScreen(
+                ProductDetailScreen(id: product.productsByCategory?[index].id ?? 1),
+                context,
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }
+

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dummyShop/providers/home_screen_provider.dart';
+import 'package:dummyShop/screens/search_screen.dart';
 import 'package:dummyShop/utils/constants/colors.dart';
+import 'package:dummyShop/utils/helper_functions/helpers_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
@@ -17,6 +19,8 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          surfaceTintColor: Colors.white,
+          shadowColor: Colors.white,
           title: const Text('Discover'),
           actions: [
             badges.Badge(
@@ -44,19 +48,21 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Column(children: [
               /// search widget
-              SearchWidget(),
+              SearchWidget(onTap: (){
+                HelperFunctions.navigateToScreen(const SearchScreen(), context);
+              },),
               /// promo slider
-              PromoSlider(),
+              const PromoSlider(),
               /// horizontal title
-              HorizontalTitleWidgt(),
+              const HorizontalTitleWidget(),
               /// categories title list
-              CategoryWidget(),
-              SizedBox(height: 20),
+              const CategoryWidget(),
+              const SizedBox(height: 20),
               /// products
-              ProductsWidget(),
+              const ProductsWidget(),
             ],
           ),
         ),
@@ -67,8 +73,8 @@ class HomeScreen extends StatelessWidget {
 
 
 
-class HorizontalTitleWidgt extends StatelessWidget {
-  const HorizontalTitleWidgt({
+class HorizontalTitleWidget extends StatelessWidget {
+  const HorizontalTitleWidget({
     super.key,
   });
 
@@ -121,28 +127,31 @@ class PromoSlider extends StatelessWidget {
 
 class SearchWidget extends StatelessWidget {
   const SearchWidget({
-    super.key,
+    super.key, required this.onTap,
   });
-
+final GestureTapCallback onTap;
   @override
   Widget build(BuildContext context) {
-    return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 15),
-    margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-    width: double.infinity,
-    height: 50,
-    decoration: BoxDecoration(
-      color: const Color(0xfff1f3f2),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: const Row(
-      children: [
-        Text('Search'),
-        Spacer(),
-        Icon(Icons.search),
-      ],
-    ),
-            );
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: double.infinity,
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xfff1f3f2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: const Row(
+        children: [
+          Text('Search'),
+          Spacer(),
+          Icon(Icons.search),
+        ],
+      ),
+              ),
+    );
   }
 }
 

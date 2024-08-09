@@ -50,4 +50,23 @@ class ProductDataAgentImpl extends ProductDataAgent {
     }
   }
 
-}
+  @override
+  Future<ProductsVO?> fetchProductsDetail(int productId)async{
+    try{
+      return await _api.fetchProductsDetails(productId);
+    }catch(e){
+      throw Exception('Failed details $e');
+    }
+  }
+
+  @override
+  Future<List<ProductsVO>?> fetchProductsSearch(String query) async{
+    try{
+      return await _api.fetchSearchProductsResponse(query).then((value) => value.products);
+    }catch(e){
+      throw Exception('Failed search products $e');
+    }
+  }
+
+
+  }

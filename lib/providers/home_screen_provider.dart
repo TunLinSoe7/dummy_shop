@@ -1,4 +1,6 @@
 
+import 'package:dummyShop/data/model/product_model.dart';
+import 'package:dummyShop/data/model/product_model_impl.dart';
 import 'package:dummyShop/data/vos/category_vo/category_vo.dart';
 import 'package:dummyShop/data/vos/product_vo.dart';
 import 'package:dummyShop/network/data_agent/product_data_agent.dart';
@@ -8,14 +10,13 @@ import 'package:flutter/material.dart';
 
 class HomeScreenProvider extends ChangeNotifier {
   final ProductDataAgent _dataAgent = ProductDataAgentImpl();
-  bool _isLoading = false;
+  final ProductModel _productModel = ProductModelImpl();
   List<ProductsVO>? products = [];
-  List<ProductsVO> productsByCategory = [];
+  List<ProductsVO>? productsByCategory = [];
 
  int selectedIndex = 0;
  List<CategoryVO> categories = [];
 
-  bool get isLoading => _isLoading;
 
   HomeScreenProvider(){
     fetchCategories();
@@ -28,12 +29,10 @@ class HomeScreenProvider extends ChangeNotifier {
   }
 
   Future<void> fetchAllProducts()async{
-    _isLoading = true;
     notifyListeners();
     try{
       await _dataAgent.fetchAllProducts().then((value) {
         products = value;
-        _isLoading = false;
         notifyListeners();
       });
     }catch(e){
@@ -42,12 +41,10 @@ class HomeScreenProvider extends ChangeNotifier {
   }
   // fetch product by category
   Future<void> fetchProductByCategory(String categoryId)async{
-    _isLoading = true;
-    notifyListeners();
     try{
-      await _dataAgent.fetchProductByCategoryVO(categoryId).then((value) {
-        productsByCategory = value;
-        _isLoading = false;
+      _productModel.fetchProductByCategoryVO(categoryId);
+      _productModel.getProductListFromDatabase(categoryId).listen((event) {
+        productsByCategory = event ?? [];
         notifyListeners();
       });
     }catch(e){
@@ -56,7 +53,6 @@ class HomeScreenProvider extends ChangeNotifier {
   }
 
   Future<void> fetchCategories()async{
-    _isLoading = true;
 
     notifyListeners();
     try{
@@ -65,12 +61,13 @@ class HomeScreenProvider extends ChangeNotifier {
           categories =value;
           fetchProductByCategory(categories[selectedIndex].slug ?? '');
         }
-        _isLoading = false;
         notifyListeners();
       });
     }catch (e){
       throw Exception('Failed $e');
     }
   }
+
+
 
 }
