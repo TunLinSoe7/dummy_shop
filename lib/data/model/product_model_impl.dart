@@ -1,7 +1,10 @@
 import 'package:dummyShop/data/model/product_model.dart';
 import 'package:dummyShop/data/vos/product_vo.dart';
+import 'package:dummyShop/data/vos/promo_vo.dart';
 import 'package:dummyShop/network/data_agent/product_data_agent.dart';
 import 'package:dummyShop/network/data_agent/product_data_agent_impl.dart';
+import 'package:dummyShop/persistent/favourite_dao.dart';
+import 'package:dummyShop/persistent/favourite_dao_impl.dart';
 import 'package:dummyShop/persistent/product_dao.dart';
 import 'package:dummyShop/persistent/product_dao_impl.dart';
 import 'package:dummyShop/persistent/product_detail_dao.dart';
@@ -16,8 +19,8 @@ class ProductModelImpl extends ProductModel{
 
   final ProductDataAgent _dataAgent = ProductDataAgentImpl();
   final ProductDAO _productDAO = ProductDAOImpl();
+  final FavouriteDAO _favouriteDAO = FavouriteDAOImpl();
   final ProductDetailDAO _productDetailDAO = ProductDetailDAOImpl();
-  //final AddToCartDAO _addToCartDAO = AddToCartDAOImpl();
   @override
   Future<List<ProductsVO>?> fetchProductByCategoryVO(String categoryId) =>_dataAgent.fetchProductByCategoryVO(categoryId).then((value) {
     if(value !=null){
@@ -44,15 +47,21 @@ class ProductModelImpl extends ProductModel{
   Stream<ProductsVO?> getProductsDetailFromDatabase(int detailId) =>_productDetailDAO.watchDetailBox()
       .startWith(_productDetailDAO.getProductDetailFromDatabaseStream(detailId))
       .map((event) => _productDetailDAO.getProductDetailFromDatabase(detailId));
-  /// add to cart
-  // @override
-  // Stream<List<ProductsVO>?> getCartListFromDatabase()=>_addToCartDAO
-  //     .watch().startWith(_addToCartDAO.getProductListFromDatabaseStream())
-  //     .map((event) => _addToCartDAO.getProductListFromDatabase());
-  //
-  // @override
-  // void removeItem(int id) =>_addToCartDAO.removeItem(id);
-  //
-  // @override
-  // void saveToCart(ProductsVO productsVO)=>_addToCartDAO.save(productsVO);
+
+  @override
+  Future<List<PromoVO>?> fetchPromoVO() =>_dataAgent.fetchPromoVO();
+
+  @override
+  Stream<List<ProductsVO>?> getFavouriteListStream() =>_favouriteDAO.watchFavouriteBox()
+      .startWith(_favouriteDAO.getFavouriteListStream())
+      .map((event) => _favouriteDAO.favouriteList());
+
+  @override
+  void removeFavourite(int id) =>_favouriteDAO.removeFavourite(id);
+
+  @override
+  void saveFavourite(ProductsVO productsVO)=>_favouriteDAO.save(productsVO);
+
+  @override
+  bool isFavourite(int id)=>_favouriteDAO.isFavourite(id);
 }

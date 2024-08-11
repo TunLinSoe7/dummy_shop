@@ -39,7 +39,7 @@ class ProductsVOAdapter extends TypeAdapter<ProductsVO> {
       meta: fields[19] as MetaVO?,
       images: (fields[20] as List?)?.cast<String>(),
       thumbnail: fields[21] as String?,
-      quantity: fields[22] as int?,
+      quantity: fields[22] as int? ?? 1,
     );
   }
 

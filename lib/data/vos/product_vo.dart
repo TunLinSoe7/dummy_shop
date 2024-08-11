@@ -76,7 +76,7 @@ class ProductsVO {
   @HiveField(21)
   String? thumbnail;
   @HiveField(22)
-  int? quantity;
+  int quantity;
 
   ProductsVO(
       {this.id,

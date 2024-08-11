@@ -1,15 +1,61 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dummyShop/screens/home_screen.dart';
 import 'package:dummyShop/utils/constants/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 
 class CartView extends StatelessWidget {
+  const CartView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Consumer<CartProvider>(
+        builder: (_,provider,__)=>Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(color: Colors.black)
+            ],
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15) ),
+          ),
+          height: 250,
+          child: ListView(
+            children: [
+              HorizontalTitleWidget(
+                title: 'Product Price',
+                subtitle: '${provider.totalPrice().toStringAsFixed(2)}\$',
+              ),const HorizontalTitleWidget(
+                title: 'Tax Fees',
+                subtitle: 'No Fee',
+              ),HorizontalTitleWidget(
+                title: 'SubTotal',
+                subtitle: '${provider.totalPrice().toStringAsFixed(2)}\$',
+              ),
+
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(30)
+                ),
+                child: const Text('Proceed to checkout',style:TextStyle(
+                    color: Colors.white,
+                    fontSize: 16
+                ),),
+              ),
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Shopping Cart'),
       ),
@@ -29,6 +75,7 @@ class CartView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Card(
+                      color: Colors.white,
                       child: Container(
                         height: 110,
                         padding: const EdgeInsets.all(10),
@@ -37,7 +84,7 @@ class CartView extends StatelessWidget {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color:Colors.grey.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10)
                               ),
                               width: 100,
@@ -68,7 +115,7 @@ class CartView extends StatelessWidget {
                         onTap: (){
                           cartProvider.removeFromCart(product.id ?? 0);
                         },
-                          child:const Icon(Icons.delete_outline_outlined,color: Colors.red,))),
+                          child:Image.asset('assets/images/delete1.png',width: 20,height: 20,))),
                   Positioned(
                     bottom: 23,
                       right: 25,
@@ -76,19 +123,28 @@ class CartView extends StatelessWidget {
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.white
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.2),
+                            width: 2
+                          )
                         ),
                         child:Row(
                           children: [
                             InkWell(
                               onTap: (){
-                                cartProvider.decreaseQuantity(product.id ?? 0);
+                                cartProvider.decreaseQuantity(product.id ?? 1);
                               },
-                                child: Icon(Icons.remove,)),
-                            SizedBox(width: 5,),
-                            Text('${product.quantity}'),
-                            SizedBox(width: 5,),
-                            Icon(Icons.add),
+                                child: const Icon(Icons.remove,)),
+                            const SizedBox(width: 5,),
+                            Text('${product.quantity}',style: const TextStyle(
+                              color: kPrimaryColor
+                            ),),
+                            const SizedBox(width: 5,),
+                            InkWell(
+                              onTap: (){
+                                cartProvider.increaseQuantity(product.id ?? 1);
+                              },
+                                child: const Icon(Icons.add)),
                           ],
                         ) ,
                       )),

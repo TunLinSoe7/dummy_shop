@@ -21,10 +21,10 @@ class ProductDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  double discountPrice(double originalPrice, double discountPercentage) {
+  String discountPrice(double originalPrice, double discountPercentage) {
     double discountAmount = originalPrice * (discountPercentage / 100);
     double discountPrice = originalPrice - discountAmount.toInt();
-    return discountPrice;
+    return discountPrice.toStringAsFixed(2);
   }
 
   Future<void> fetchProductDetails(int productId) async {

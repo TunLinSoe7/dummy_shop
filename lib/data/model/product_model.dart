@@ -1,4 +1,6 @@
 
+import 'package:dummyShop/data/vos/promo_vo.dart';
+
 import '../vos/product_vo.dart';
 
 abstract class ProductModel{
@@ -10,9 +12,13 @@ abstract class ProductModel{
   Future<ProductsVO?> fetchProductDetailVO(int detailId);
   Stream<ProductsVO?> getProductsDetailFromDatabase(int detailId);
 
-  // /// add to cart
-  // void saveToCart(ProductsVO productsVO);
-  // Stream<List<ProductsVO>?> getCartListFromDatabase();
-  // void removeItem(int id);
+ ///promo slider
+  Future<List<PromoVO>?> fetchPromoVO();
+
+  ///favourite dao
+  void saveFavourite(ProductsVO productsVO);
+  Stream<List<ProductsVO>?> getFavouriteListStream();
+  void removeFavourite(int id);
+  bool isFavourite(int id);
 
 }

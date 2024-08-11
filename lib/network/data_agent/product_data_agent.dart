@@ -1,6 +1,7 @@
 
 import 'package:dummyShop/data/vos/category_vo/category_vo.dart';
 import 'package:dummyShop/data/vos/product_vo.dart';
+import 'package:dummyShop/data/vos/promo_vo.dart';
 
 abstract class ProductDataAgent{
   Future<List<ProductsVO>?> fetchProductByCategoryVO(String categoryId);
@@ -9,4 +10,6 @@ abstract class ProductDataAgent{
   Future<List<CategoryVO>?> fetchCategories();
   Future<ProductsVO?> fetchProductsDetail(int productId);
   Future<List<ProductsVO>?> fetchProductsSearch(String query);
+
+  Future<List<PromoVO>?> fetchPromoVO();
 }

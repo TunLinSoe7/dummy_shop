@@ -3,13 +3,14 @@ import 'package:dummyShop/data/vos/product_vo.dart';
 import 'package:dummyShop/providers/product_details_provider.dart';
 import 'package:dummyShop/screens/add_to_cart_screen.dart';
 import 'package:dummyShop/utils/constants/colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dummyShop/utils/shimmers/detail_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key, required this.id});
+  const ProductDetailScreen({super.key, required this.id,required this.productsVO});
   final int id;
+  final ProductsVO productsVO;
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +18,9 @@ class ProductDetailScreen extends StatelessWidget {
       create: (_) => ProductDetailProvider(id),
       child: Consumer<ProductDetailProvider>(
         builder: (_, product, __) {
-          return Scaffold(
+          return  Scaffold(
             body: SafeArea(
-              child: product.productDetails == null
-                  ? const Center(child: CircularProgressIndicator())
-                  : CustomScrollView(
+              child: CustomScrollView(
                 slivers: [
                   appBar(product, context),
                   SliverPadding(
@@ -45,7 +44,7 @@ class ProductDetailScreen extends StatelessWidget {
                                   children: [
                                     const Icon(Icons.star,color: Colors.amber,),
                                     const SizedBox(width: 5,),
-                                    Text('${product.productDetails?.rating}',style: const TextStyle(
+                                    Text('${productsVO.rating}',style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),),
                                   ],
@@ -64,16 +63,17 @@ class ProductDetailScreen extends StatelessWidget {
                                   color: const Color(0xffffe16a),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: Text('${product.productDetails?.discountPercentage}%',style: const TextStyle(
+                                child: Text('${productsVO.discountPercentage}%',style: const TextStyle(
                                   fontWeight: FontWeight.bold
                                 ),),
                               ),
                               const SizedBox(width: 20,),
-                              Text('\$${product.productDetails?.price}',style: const TextStyle(
+                              Text('\$${productsVO.price}',style: const TextStyle(
                                 decoration: TextDecoration.lineThrough
                               ),),
                               const SizedBox(width: 20,),
-                             Text('\$${product.discountPrice(product.productDetails?.price ?? 0.0, product.productDetails?.discountPercentage ?? 0.0)}',style: const TextStyle(
+                             Text('\$${product.discountPrice(productsVO.price ?? 0.0, productsVO.discountPercentage ?? 0.0)}',style: const TextStyle(
+                               color: kPrimaryColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20
                               ),),
@@ -85,19 +85,19 @@ class ProductDetailScreen extends StatelessWidget {
                               const Text('Brand : ',style: TextStyle(
                                 fontWeight: FontWeight.bold
                               ),),
-                              Text(product.productDetails?.brand ?? ''),
+                              Text(productsVO.brand ?? ''),
                             ],
                           ):const SizedBox(), Row(
                             children: [
                               const Text('Status : ',style: TextStyle(
                                 fontWeight: FontWeight.bold
                               ),),
-                              Text(product.productDetails?.availabilityStatus ?? ''),
+                              Text(productsVO.availabilityStatus ?? ''),
                             ],
                           ),
                           const SizedBox(height: 15,),
-                          Text(product.productDetails?.title ?? '',style: const TextStyle(fontSize: 20),),
-                          Text(product.productDetails?.description ?? '',style: const TextStyle(fontSize: 16),
+                          Text(productsVO.title ?? '',style: const TextStyle(fontSize: 20),),
+                          Text(productsVO.description ?? '',style: const TextStyle(fontSize: 16),
                             textAlign: TextAlign.justify,
                           ),
                         ],
@@ -130,8 +130,14 @@ class ProductDetailScreen extends StatelessWidget {
               },
               itemCount: product.productDetails?.images?.length,itemBuilder: (context,index){
             return Hero(
-              tag: 'tag$index',
-              child: CachedNetworkImage(
+              tag: 'tag${product.productDetails?.images}',
+              child: product.productDetails == null
+                  ? const Center(
+                    child: CircularProgressIndicator(
+                                    color: kPrimaryColor,
+                                  ),
+                  )
+                  :CachedNetworkImage(
                 imageUrl: '${product.productDetails?.images?[index]}',
                 placeholder: (_,url)=>Image.asset('assets/images/images.png'),
                 fit: BoxFit.cover,

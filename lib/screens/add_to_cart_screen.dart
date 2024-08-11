@@ -11,52 +11,27 @@ class AddToCartScreen extends StatelessWidget {
     return Consumer<CartProvider>(builder: (_,provider,__){
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 15),
+        margin: const EdgeInsets.only(bottom: 10),
         height: kBottomNavigationBarHeight,
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: (){
-                provider.decrease(productsVO);
-              },
-              child: const CircleAvatar(
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.remove,color: Colors.white,),
-              ),
+        child: GestureDetector(
+          onTap: (){
+            provider.saveToCart(productsVO);
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width /1.2,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.black
             ),
-            const SizedBox(width: 15,),
-            Text('${productsVO.quantity ?? 1}',style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17
-            ),),
-            const SizedBox(width: 15,),
-            GestureDetector(
-              onTap: (){
-                provider.increase(productsVO);
-              },
-              child: const CircleAvatar(
-                backgroundColor: Colors.black,
-                child: Icon(Icons.add,color: Colors.white,),
-              ),
+            child: const Center(
+              child: Text('Add to Cart',style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
+              ),),
             ),
-            const Spacer(),
-            GestureDetector(
-              onTap: (){
-                provider.saveToCart(productsVO);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.black
-                ),
-                child: const Text('Add to Cart',style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     });

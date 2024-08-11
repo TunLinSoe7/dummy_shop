@@ -1,3 +1,4 @@
+import 'package:dummyShop/data/vos/product_vo.dart';
 import 'package:dummyShop/providers/search_screen_provider.dart';
 import 'package:dummyShop/screens/product_detail_screen.dart';
 import 'package:dummyShop/utils/helper_functions/helpers_functions.dart';
@@ -86,10 +87,12 @@ class SearchResultScreen extends StatelessWidget {
                         price: '${provider.search?[index].price}',
                         onTap: () {
                           HelperFunctions.navigateToScreen(
-                            ProductDetailScreen(id: provider.search?[index].id ?? 101),
+                            ProductDetailScreen(
+                              productsVO: provider.search?[index] ?? ProductsVO(),
+                                id: provider.search?[index].id ?? 101),
                             context,
                           );
-                        },
+                        }, onPressed: () {  },
                       );
                     },
                   ),

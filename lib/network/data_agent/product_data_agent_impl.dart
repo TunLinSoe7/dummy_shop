@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:dummyShop/data/vos/category_vo/category_vo.dart';
 import 'package:dummyShop/data/vos/product_vo.dart';
+import 'package:dummyShop/data/vos/promo_vo.dart';
 import 'package:dummyShop/network/api/product_api.dart';
 import 'package:dummyShop/network/data_agent/product_data_agent.dart';
 import 'package:dummyShop/network/response/product_response.dart';
 import 'package:dummyShop/utils/constants/api_constant.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class ProductDataAgentImpl extends ProductDataAgent {
@@ -66,6 +68,17 @@ class ProductDataAgentImpl extends ProductDataAgent {
     }catch(e){
       throw Exception('Failed search products $e');
     }
+  }
+
+  @override
+  Future<List<PromoVO>?> fetchPromoVO()async {
+   try{
+     final String response = await rootBundle.loadString("assets/data/promo.json");
+     final List<dynamic> data  = jsonDecode(response);
+     return data.map((json) => PromoVO.fromJson(json)).toList();
+   }catch (e){
+     throw Exception('failed json$e');
+   }
   }
 
 

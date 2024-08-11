@@ -6,25 +6,19 @@ import '../data/vos/product_vo.dart';
 class CartProvider extends ChangeNotifier{
   final AddToCartModel _addToCartModel = AddToCartModelImpl();
   List<ProductsVO>? cartItems = [];
-  int count = 1;
 
   void saveToCart(ProductsVO productsVO){
     _addToCartModel.addToCart(productsVO);
     notifyListeners();
   }
 
-  void increase(ProductsVO productsVO) {
-    productsVO.quantity = (productsVO.quantity ?? 0) + 1;
-    notifyListeners();
-  }
-  void decrease(ProductsVO productsVO) {
-    if (productsVO.quantity != null && (productsVO.quantity ?? 0) > 1) {
-      productsVO.quantity = (productsVO.quantity ?? 0) - 1;
+  double totalPrice() {
+    double total = 0;
+    for(var cartItem in cartItems!){
+      total += cartItem.price! * cartItem.quantity;
     }
-    notifyListeners();
+    return total;
   }
-
-
   void removeFromCart(int productId){
     _addToCartModel.removeFromCart(productId);
     notifyListeners();

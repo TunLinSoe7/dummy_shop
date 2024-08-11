@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dummyShop/data/vos/promo_vo.dart';
 import 'package:dummyShop/providers/home_screen_provider.dart';
+import 'package:dummyShop/screens/all_categories_screen.dart';
+import 'package:dummyShop/screens/cart_view.dart';
 import 'package:dummyShop/screens/search_screen.dart';
 import 'package:dummyShop/utils/constants/colors.dart';
 import 'package:dummyShop/utils/helper_functions/helpers_functions.dart';
@@ -34,16 +37,21 @@ class HomeScreen extends StatelessWidget {
               badgeStyle: const badges.BadgeStyle(
                 badgeColor: Color(0xff19c463),
               ),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.grey,
+              child: GestureDetector(
+                onTap: (){
+                  HelperFunctions.navigateToScreen(const CartView(), context);
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
                   ),
+                  child: Image.asset('assets/images/bag.png', width: 20, height: 20),
                 ),
-                child: Image.asset('assets/images/bag.png', width: 20, height: 20),
               ),
             ),
           ],
@@ -57,8 +65,10 @@ class HomeScreen extends StatelessWidget {
               /// promo slider
               const PromoSlider(),
               /// horizontal title
-              const HorizontalTitleWidget(),
-              /// categories title list
+              HorizontalTitleWidget(title: 'Categories',subtitle: 'See All',onTap: (){
+                HelperFunctions.navigateToScreen(const AllCategoriesScreen(), context);
+              },),
+              /// categories list
               const CategoryWidget(),
               const SizedBox(height: 20),
               /// products
@@ -75,21 +85,27 @@ class HomeScreen extends StatelessWidget {
 
 class HorizontalTitleWidget extends StatelessWidget {
   const HorizontalTitleWidget({
-    super.key,
+    super.key, required this.title, required this.subtitle, this.onTap,
   });
+  final String title;
+  final GestureTapCallback? onTap;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
-    return const ListTile(
+    return ListTile(
       title: Text(
-        'Categories',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        title,
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      trailing: Text(
-        'See all',
-        style: TextStyle(
-          color: kPrimaryColor,
-          fontSize: 15,
+      trailing: GestureDetector(
+        onTap: onTap,
+        child: Text(
+           subtitle,
+          style: const TextStyle(
+            color: kPrimaryColor,
+            fontSize: 15,
+          ),
         ),
       ),
     );
@@ -103,11 +119,11 @@ class PromoSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<HomeScreenProvider,List<ProductsVO>?>(builder: (_,value,__){
+    return Selector<HomeScreenProvider,List<PromoVO>?>(builder: (_,value,__){
       return SizedBox(
         child: CarouselSlider.builder(itemCount: value?.length, itemBuilder: (_,index,realIndex){
           return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            margin: const EdgeInsets.symmetric(vertical: 15),
             width: double.infinity,
             height: 200,
             decoration: BoxDecoration(
@@ -115,10 +131,13 @@ class PromoSlider extends StatelessWidget {
             ),
             child: value==null || value.isEmpty?const Center(
               child: CircularProgressIndicator(),
-            ):CachedNetworkImage(imageUrl: '${value[index].thumbnail}',),
+            ):ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+                child: Image.asset('${value[index].image}',fit: BoxFit.fill,)),
           );
         }, options: CarouselOptions(
           autoPlay: true,
+         enlargeCenterPage: true
         )),
       );
     }, selector: (_,provider)=>provider.products );

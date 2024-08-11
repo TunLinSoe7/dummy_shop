@@ -37,9 +37,12 @@ dependencies:
   cached_network_image: ^3.4.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  google_fonts: ^6.2.1
   hive_generator: ^2.0.1
   stream_transform: ^2.1.0
   persistent_shopping_cart: ^0.0.7
+  iconsax: ^0.0.8
+  shimmer: ^3.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -77,6 +80,7 @@ flutter:
   assets:
     - assets/vectors/
     - assets/images/
+    - assets/data/promo.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

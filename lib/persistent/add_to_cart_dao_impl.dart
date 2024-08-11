@@ -18,7 +18,7 @@ class AddToCartDAOImpl extends AddToCartDAO{
   void addToCart(ProductsVO productsVO) {
     if (_cartBox().containsKey(productsVO.id)) {
       ProductsVO existingProduct = _cartBox().get(productsVO.id)!;
-      existingProduct.quantity = (existingProduct.quantity ?? 0) + 1;
+      existingProduct.quantity = (existingProduct.quantity) + 1;
       _cartBox().put(productsVO.id, existingProduct);
     } else {
       _cartBox().put(productsVO.id, productsVO);
@@ -37,7 +37,7 @@ class AddToCartDAOImpl extends AddToCartDAO{
   void increaseProductQuantity(int productId) {
     if (_cartBox().containsKey(productId)) {
       ProductsVO existingProduct = _cartBox().get(productId)!;
-      //existingProduct.quantity = (existingProduct.quantity ?? 0) + 1;
+      existingProduct.quantity = (existingProduct.quantity) + 1;
       _cartBox().put(productId, existingProduct);
     }
   }
@@ -46,10 +46,10 @@ class AddToCartDAOImpl extends AddToCartDAO{
   void decreaseProductQuantity(int productId) {
     if (_cartBox().containsKey(productId)) {
       ProductsVO existingProduct = _cartBox().get(productId)!;
-      // if ((existingProduct.quantity ?? 0) > 1) {
-      //   existingProduct.quantity = (existingProduct.quantity ?? 0) - 1;
-      //   _cartBox().put(productId, existingProduct);
-      // }
+      if(existingProduct.quantity>1){
+        existingProduct.quantity = (existingProduct.quantity) - 1;
+        _cartBox().put(productId, existingProduct);
+      }
     }
   }
   
